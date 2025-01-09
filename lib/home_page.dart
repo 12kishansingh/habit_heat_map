@@ -9,17 +9,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   // text controller
-  final TextEditingController textController=TextEditingController();
+  final TextEditingController textController = TextEditingController();
   // create new habit
   void createNewHabit() {
     showDialog(
-      context: context,
-      builder: (context)=>AlertDialog(
-        content: TextField(
-          controller: textController,
-        ),
-      )
-    );
+        context: context,
+        builder: (context) => AlertDialog(
+              content: TextField(
+                controller: textController,
+              ),
+            ));
   }
 
   @override
