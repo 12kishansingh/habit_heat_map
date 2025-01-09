@@ -9,7 +9,6 @@ class HabitDatabase extends ChangeNotifier {
   /*
   setup
   */
-
   //initialize -database
   static Future<void> initialize() async {
     final dir = await getApplicationDocumentsDirectory();
@@ -31,20 +30,69 @@ class HabitDatabase extends ChangeNotifier {
   }
 
   // get frist dateof app setting
-  Future<DateTime?>getFirstLaunchedDate() async{
-    final settings=await isar.appSettings.where().findFirst();
+  Future<DateTime?> getFirstLaunchedDate() async {
+    final settings = await isar.appSettings.where().findFirst();
     return settings?.firstLaunchDate;
   }
 
   /*
-  CRUD Operation */
+  CRUD Operations
+  */
 
   // lsit of habit
-
+  final List<Habit> currentHabits = [];
   // create -- add a new habit
+  Future<void> addHabit(String habitName) async {
+    // create a new habit
+    final newHabit = Habit()..name = habitName;
+
+    //save to db
+    await isar.writeTxn(() => isar.habits.put(newHabit));
+    // re-read from db
+    readHabits();
+  }
 
   // read -read saved habit from database
+  Future<void> readHabits() async {
+    // fetch all the habits from db
+    List<Habit> fetchedHabits = await isar.habits.where().findAll();
+
+    // give to current habits
+    currentHabits.clear();
+    currentHabits.addAll(fetchedHabits);
+    // update ui
+    notifyListeners();
+  }
+
   // update -- check habit on and off
+  Future<void> updateHabitCompletion(int id, bool isComplted) async {
+    // find the spectific habit
+    final habit = await isar.habits.get(id);
+    // update complteiton status
+    if (habit != null) {
+      await isar.writeTxn(() async {
+        // if habit is complted -> add the current date to the  completeddate list
+        if (isComplted && !habit.completedDays.contains(DateTime.now())) {
+          // today
+          final today = DateTime.now();
+          // add the current date  if it's not already in the list
+          habit.completedDays.add(
+            DateTime(
+              today.year,
+              today.month,
+              today.day,
+            ),
+          );
+        } else {
+          // remove curr date if the habit is marked as not completed
+          habit.completedDays.removeWhere((date) =>
+              date.year == DateTime.now().year &&
+              date.month== DateTime.now().month &&
+              date.day == DateTime.now().day);
+        }
+      });
+    }
+  }
   // update-- edit habit name
   // delete -delete habit
 }
