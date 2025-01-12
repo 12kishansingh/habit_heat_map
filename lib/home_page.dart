@@ -154,12 +154,14 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         elevation:0,
+        //backgroundColor: Colors.transparent,
+        //foregroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       drawer: const MyDrawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: createNewHabit,
         elevation: 0,
-        
+
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(
           Icons.add,
