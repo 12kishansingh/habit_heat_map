@@ -17,10 +17,11 @@ class MyHeatMap extends StatelessWidget {
       endDate: DateTime.now(),
       datasets: dataset,
       colorMode: ColorMode.color,
-      defaultColor: Theme.of(context).colorScheme.secondary,
-      textColor: const Color.fromARGB(255, 249, 247, 247),
+      defaultColor:  Theme.of(context).colorScheme.secondary,
+      textColor: Color.fromARGB(255, 243, 1, 1),
       showColorTip: false,
       showText: true,
+      borderRadius: 5,
       scrollable: true,
       size: 30,
       colorsets: {

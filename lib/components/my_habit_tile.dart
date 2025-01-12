@@ -33,15 +33,16 @@ class MyHabitTile extends StatelessWidget {
             SlidableAction(
               onPressed: editHabit,
               backgroundColor: Colors.grey.shade800,
-              icon: Icons.delete,
+              icon: Icons.settings,
               borderRadius: BorderRadius.circular(8),
             ),
+            
 
             // delete option
             SlidableAction(
               onPressed: deleteHabit,
               backgroundColor: Colors.red,
-              icon: Icons.settings,
+              icon: Icons.delete_outlined,
               borderRadius: BorderRadius.circular(8),
             ),
           ],

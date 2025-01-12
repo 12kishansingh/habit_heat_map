@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:habit_heat_map/components/heat_map.dart';
 import 'package:habit_heat_map/components/my_drawer.dart';
 import 'package:habit_heat_map/components/my_habit_tile.dart';
@@ -157,7 +156,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         elevation: 0,
         //backgroundColor: Colors.transparent,
-        //foregroundColor: Theme.of(context).colorScheme.inversePrimary,
+        foregroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       drawer: const MyDrawer(),
       floatingActionButton: FloatingActionButton(
