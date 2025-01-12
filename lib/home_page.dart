@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:habit_heat_map/components/heat_map.dart';
 import 'package:habit_heat_map/components/my_drawer.dart';
 import 'package:habit_heat_map/components/my_habit_tile.dart';
 import 'package:habit_heat_map/database/habit_database.dart';
@@ -153,7 +155,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation:0,
+        elevation: 0,
         //backgroundColor: Colors.transparent,
         //foregroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
@@ -161,14 +163,49 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: createNewHabit,
         elevation: 0,
-
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: const Icon(
           Icons.add,
         ),
       ),
-      body: _buildHabitList(),
+      body: ListView(
+        children: [
+          //HEATMAP
+          _buildHeatMap(),
+          //HABIT
+          _buildHabitList(),
+        ],
+      ),
     );
+  }
+
+  // build the H E A T M A P
+  Widget _buildHeatMap() {
+    // habit data base
+    final habitDatabase = context.watch<HabitDatabase>();
+
+    // current habits
+    List<Habit> currentHabits = habitDatabase.currentHabits;
+
+    // return heat map ui
+    return FutureBuilder<DateTime?>(
+        future: habitDatabase.getFirstLaunchedDate(),
+        builder: (context, snapshot) {
+          // once the data is abailable->build the heat map
+          if (snapshot.hasData) {
+            return MyHeatMap(
+              dataset: prepareHeatMapDataset(currentHabits),
+              startdate: snapshot.data!,
+            );
+          }
+          //handel case where no data is returened
+          else{
+            return Container(
+
+            );
+          }
+          
+        });
   }
 
   // build habit list
@@ -180,7 +217,10 @@ class _HomePageState extends State<HomePage> {
     List<Habit> currentHabits = habitDatabase.currentHabits;
     // return list of habits UI
     return ListView.builder(
+
       itemCount: currentHabits.length,
+      shrinkWrap: true,
+      physics:const NeverScrollableScrollPhysics(), 
       itemBuilder: (context, index) {
         // get each individual habit
         final habit = currentHabits[index];
@@ -194,8 +234,7 @@ class _HomePageState extends State<HomePage> {
           txt: habit.name,
           onChanged: (value) => checkHabitOnOff(value, habit),
           editHabit: (context) => editHabitBox(habit),
-          deleteHabit: (context)=>delteHabitBox(habit),
-          
+          deleteHabit: (context) => delteHabitBox(habit),
         );
       },
     );
