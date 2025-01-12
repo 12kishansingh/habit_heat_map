@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:habit_heat_map/darkmode.dart';
 import 'package:habit_heat_map/database/habit_database.dart';
 import 'package:habit_heat_map/home_page.dart';
-import 'package:habit_heat_map/lightmode.dart';
-import 'package:habit_heat_map/models/habit.dart';
 import 'package:habit_heat_map/theme_provider.dart';
 import 'package:provider/provider.dart';
 

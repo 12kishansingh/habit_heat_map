@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:habit_heat_map/components/my_drawer.dart';
+import 'package:habit_heat_map/components/my_habit_tile.dart';
 import 'package:habit_heat_map/database/habit_database.dart';
+import 'package:habit_heat_map/models/habit.dart';
+import 'package:habit_heat_map/utility/habit_util.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,8 +13,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    // read the exisiting habits on app startup
+    Provider.of<HabitDatabase>(context, listen: false).readHabits();
+
+    super.initState();
+  }
+
   // text controller
   final TextEditingController textController = TextEditingController();
+
   // create new habit
   void createNewHabit() {
     showDialog(
@@ -43,22 +55,23 @@ class _HomePageState extends State<HomePage> {
                 // cancel button
                 MaterialButton(
                   onPressed: () {
-                    //pop box
+                    // pop box
                     Navigator.pop(context);
-                    //clear controller
+                    // clear controller
                     textController.clear();
-
                   },
                   child: const Text('Cancel'),
                 ),
               ],
             ));
   }
+  
+    // check habit on and off
+    void checkHabitOnOff(bool? value,Habit habit){}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(),
       drawer: const MyDrawer(),
       floatingActionButton: FloatingActionButton(
@@ -69,6 +82,34 @@ class _HomePageState extends State<HomePage> {
           Icons.add,
         ),
       ),
+      body: _buildHabitList(),
+    );
+  }
+
+  // build habit list
+  Widget _buildHabitList() {
+    // habit db
+    final habitDatabase = context.watch<HabitDatabase>();
+
+    // current habits;
+    List<Habit> currentHabits = habitDatabase.currentHabits;
+    // return list of habits UI
+    return ListView.builder(
+      itemCount: currentHabits.length,
+      itemBuilder: (context, index) {
+        // get each individual habit
+        final habit = currentHabits[index];
+
+        // check if habit is completed today
+        bool isCompletedToday = isHabitCompletedToday(habit.completedDays);
+
+        // return habit tile UI
+        return MyHabitTile(
+          isCompleted: isCompletedToday,
+          txt: habit.name,
+          onChanged: (value)=>checkHabitOnOff(value,habit),
+        );
+      },
     );
   }
 }
